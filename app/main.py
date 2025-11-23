@@ -70,7 +70,7 @@ def shop_trip() -> None:
         customer.money -= costs_to_drive[shop_chosen]
         customer.location = shops[shop_chosen].location
         customer.money -= costs_of_goods[shop_chosen]
-        print(f"Date: {datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}")
+        print(f"Date: {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
         print(f"Thanks, {customer.name}, for your purchase!")
         print("You have bought:")
         print(f"{customer.milk_to_buy} milks for"
