@@ -66,10 +66,9 @@ def shop_trip() -> None:
         print(f"Date: {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
         print(f"Thanks, {customer.name}, for your purchase!")
         print("You have bought:")
-        for product in ["milk", "bread", "butter"]:
-            print(f"{customer.products[product]} {product}s for"
-                  f"{customer.products[product]
-                     * shops[shop_chosen].prices[product]: g}"
+        for pd in ["milk", "bread", "butter"]:
+            print(f"{customer.products[pd]} {pd}s for"
+                  f"{customer.products[pd] * shops[shop_chosen].prices[pd]: g}"
                   f" dollars")
         print(f"Total cost is {costs_of_goods[shop_chosen]} dollars")
         print("See you again!\n")
