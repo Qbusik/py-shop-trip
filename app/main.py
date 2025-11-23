@@ -8,29 +8,6 @@ from app.shop import Shop
 
 
 def shop_trip() -> None:
-    with open("app/config.json", "r") as file:
-        config = json.load(file)
-    fuel_price = config["FUEL_PRICE"]
-    customers = []
-    shops = []
-    for customer in config["customers"]:
-        customers.append(Customer(
-            customer["name"],
-            customer["product_cart"]["milk"],
-            customer["product_cart"]["bread"],
-            customer["product_cart"]["butter"],
-            customer["location"],
-            customer["money"],
-            Car(customer["car"]["brand"], customer["car"]["fuel_consumption"])
-        ))
-    for shop in config["shops"]:
-        shops.append(Shop(
-            shop["name"],
-            shop["location"],
-            shop["products"]["milk"],
-            shop["products"]["bread"],
-            shop["products"]["butter"]
-        ))
 
     def calculate_distance(
             customer_location: list[int],
@@ -39,6 +16,25 @@ def shop_trip() -> None:
         return sqrt((customer_location[0] - shop_location[0]) ** 2
                     + (customer_location[1] - shop_location[1]) ** 2)
 
+    with open("app/config.json", "r") as file:
+        config = json.load(file)
+    fuel_price = config["FUEL_PRICE"]
+    customers = []
+    shops = []
+    for customer in config["customers"]:
+        customers.append(Customer(
+            customer["name"],
+            customer["product_cart"],
+            customer["location"],
+            customer["money"],
+            Car(customer["car"]["brand"], customer["car"]["fuel_consumption"])
+        ))
+    for shop in config["shops"]:
+        shops.append(Shop(
+            shop["name"],
+            shop["location"],
+            shop["products"]
+        ))
     for customer in customers:
         print(f"{customer.name} has {customer.money} dollars")
         costs_to_drive = []
@@ -48,11 +44,8 @@ def shop_trip() -> None:
             one_way_cost =\
                 (calculate_distance(customer.location, shop.location)
                  * (customer.car.fuel_consumption / 100) * fuel_price)
-
             costs_to_drive.append(one_way_cost)
-            costs_of_products = customer.milk_to_buy * shop.milk_price
-            costs_of_products += customer.bread_to_buy * shop.bread_price
-            costs_of_products += customer.butter_to_buy * shop.butter_price
+            costs_of_products = shop.calculate_shopping_cost(customer)
             costs_of_goods.append(costs_of_products)
             full_cost = round((one_way_cost * 2 + costs_of_products), 2)
             costs_of_all.append(full_cost)
@@ -73,15 +66,10 @@ def shop_trip() -> None:
         print(f"Date: {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
         print(f"Thanks, {customer.name}, for your purchase!")
         print("You have bought:")
-        print(f"{customer.milk_to_buy} milks for"
-              f"{customer.milk_to_buy * shops[shop_chosen].milk_price: g}"
-              f" dollars")
-        print(f"{customer.bread_to_buy} breads for"
-              f"{customer.bread_to_buy * shops[shop_chosen].bread_price: g}"
-              f" dollars")
-        print(f"{customer.butter_to_buy} butters for"
-              f"{customer.butter_to_buy * shops[shop_chosen].butter_price: g}"
-              f" dollars")
+        for product in ["milk", "bread", "butter"]:
+            print(f"{customer.products[product]} {product}s for"
+                  f"{customer.products[product] * shops[shop_chosen].prices[product]: g}"
+                  f" dollars")
         print(f"Total cost is {costs_of_goods[shop_chosen]} dollars")
         print("See you again!\n")
         print(f"{customer.name} rides home")

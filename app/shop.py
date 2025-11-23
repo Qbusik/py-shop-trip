@@ -1,14 +1,23 @@
+from app.customer import Customer
+
+
 class Shop:
     def __init__(
         self,
         name: str,
-        location: list[int],
-        milk_price: float | int,
-        bread_price: float | int,
-        butter_price: float | int,
+        location: list,
+        prices: dict,
     ) -> None:
         self.name = name
         self.location = location
-        self.milk_price = milk_price
-        self.bread_price = bread_price
-        self.butter_price = butter_price
+        self.prices = prices
+
+    def calculate_shopping_cost(
+            self,
+            customer: Customer
+    ) -> float:
+        result = 0
+        result += self.prices["milk"] * customer.products["milk"]
+        result += self.prices["bread"] * customer.products["bread"]
+        result += self.prices["butter"] * customer.products["butter"]
+        return result
