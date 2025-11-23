@@ -15,3 +15,9 @@ class Customer:
         self.location = location
         self.money = money
         self.car = car
+
+    def print_money(self) -> None:
+        return print(f"{self.name} has {self.money} dollars")
+
+    def go_home(self) -> None:
+        print(f"{self.name} rides home")
